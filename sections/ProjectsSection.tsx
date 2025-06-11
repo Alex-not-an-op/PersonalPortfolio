@@ -1,0 +1,347 @@
+import Image from "next/image";
+import Link from "next/link";
+import React, {
+    CSSProperties,
+    DOMAttributes,
+    FC,
+    Ref,
+    memo,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
+import useWindowDimensions from "../hooks/useWindowDimensions";
+import { Layout } from "../components/Layout";
+import { SectionTitle } from "../components/SectionTitle";
+import ProjectsSvg from "../assets/Projects.svg";
+import { projects } from "../data/projects";
+import { DiagonalDivider } from "../components/DiagonalDivider";
+import {
+    Project,
+    INDEX,
+    mapIndicesToObject,
+    getTransition,
+    GridLayout,
+    Box,
+} from "../data/ProjectsInterface";
+import { useAnimation, Transition } from "../hooks/useAnimation";
+import { ListenerProvider, useListeners } from "../hooks/useListener";
+import { listeners } from "process";
+import { range } from "../hooks/util";
+
+export const getStyle = ([x, y, w, h]: Box): CSSProperties => ({
+    gridArea: `${y} / ${x} / ${y + h} / ${x + w}`,
+});
+
+const toBox: (name: string, template: string[]) => Box = (name, template) =>
+    template.reduce(
+        ([x, y, w, h], rowV, rowI) => {
+            const matches = rowV
+                .split(" ")
+                .map((v, i) => [v, i] as [string, number])
+                .filter(([v, _]) => v === name)
+                .map(([_, i]) => i);
+
+            if (!matches.length) return [x, y, w, h];
+
+            return [matches[0] + 1, y || rowI + 1, matches.length, h + 1];
+        },
+        [0, 0, 0, 0]
+    );
+
+const templates = (() => {
+    const tmp = {
+        xl: [
+            "a5 a5 a3 a3 a1 a1 a1",
+            "a5 a5 a3 a3 a1 a1 a1",
+            "a5 a5 a3 a3 a1 a1 a1",
+            "a5 a5 a3 a3 . a2 a2",
+            "a5 a5 a4 a4 a4 a2 a2",
+            "a5 a5 a4 a4 a4 a2 a2",
+            "a6 a6 a6 a6 a7 a7 a7",
+            "a6 a6 a6 a6 a7 a7 a7",
+            "a6 a6 a6 a6 a7 a7 a7",
+        ],
+        lg: [
+            "a1 a1 a1 a1 a2 a2 a2",
+            "a1 a1 a1 a1 a2 a2 a2",
+            "a4 a4 a4 a3 a3 a3 a3",
+            "a4 a4 a4 a3 a3 a3 a3",
+            "a5 a5 a5 a3 a3 a3 a3",
+            "a5 a5 a5 a6 a6 a6 a6",
+            "a7 a7 a7 a6 a6 a6 a6",
+            "a7 a7 a7 a6 a6 a6 a6",
+        ],
+        md: [
+            "a1 a1 a1 a2 a2 a2",
+            "a1 a1 a1 a2 a2 a2",
+            "a1 a1 a1 a2 a2 a2",
+            "a1 a1 a1 a4 a4 a4",
+            "a3 a3 a3 a4 a4 a4",
+            "a3 a3 a3 a4 a4 a4",
+            "a3 a3 a3 a5 a5 a5",
+            "a3 a3 a3 a5 a5 a5",
+            "a6 a6 a6 a5 a5 a5",
+            "a6 a6 a6 a7 a7 a7",
+            "a6 a6 a6 a7 a7 a7",
+            "a6 a6 a6 a7 a7 a7",
+        ],
+        sm: ["a1", "a2", "a3", "a4", "a5", "a6", "a7"],
+    };
+
+    const toBoxes = (tmp: string[]) =>
+        range(0, projects.length).map((i) => toBox(`a${i + 1}`, tmp));
+
+    return Object.fromEntries(
+        Object.entries(tmp).map(([k, v]) => [k, toBoxes(v)])
+    ) as Record<keyof typeof tmp, Box[]>;
+})();
+
+const layoutBreakpoints: (GridLayout & { minW: number })[] = [
+    {
+        minW: 1600,
+        classNameGrid: "grid grid-cols-7 gap-2 auto-rows-[minmax(10rem,auto)]",
+        boxes: templates.xl,
+    },
+    {
+        minW: 1024,
+        classNameGrid: "grid grid-cols-7 gap-2 auto-rows-[minmax(14rem,auto)]",
+        boxes: templates.lg,
+    },
+    {
+        minW: 640,
+        classNameGrid: "grid grid-cols-6 gap-1 auto-rows-[minmax(10rem,auto)]",
+        boxes: templates.md,
+    },
+    {
+        minW: 0,
+        classNameGrid: "grid grid-cols-1 gap-1 auto-rows-[minmax(24rem,auto)]",
+        boxes: templates.sm,
+    },
+];
+
+const useLayout = () => {
+    const { width } = useWindowDimensions();
+
+    const minLayout = layoutBreakpoints[layoutBreakpoints.length - 1];
+    return layoutBreakpoints.reduce(
+        (acc, layout) =>
+            width > layout.minW && acc.minW < layout.minW ? layout : acc,
+        minLayout
+    );
+};
+
+export type ProjectsArgs = {
+    projects: Record<INDEX, Project>;
+};
+
+const Projects: FC<ProjectsArgs> = ({ projects }) => {
+    const { boxes, classNameGrid } = useLayout();
+
+    const { pushIndex, animation } = useAnimation(boxes);
+
+    const listener_top = useListeners(() => pushIndex("buffer_top"));
+
+    const listener_bottom = useListeners(() => pushIndex("buffer_bottom"));
+
+    const gridMaxY = boxes.reduce(
+        (maxY, [x, y, w, h]) => (maxY > y + h ? maxY : y + h),
+        0
+    );
+
+    return (
+        <div className="flex flex-col w-full bg-transparent relative z-20">
+            <div className="h-16 -mt-16 z-[60]" {...listener_top}></div>
+            <div className={`py-4 ${classNameGrid} relative z-50`}>
+                {(Object.keys(projects) as any).map((i: INDEX) => {
+                    let transition = null;
+                    if (i === animation.from?.index)
+                        transition = animation.from;
+                    else if (i === animation.to?.index)
+                        transition = animation.to;
+
+                    const project = projects[i];
+                    const box = boxes[i];
+                    const [_, y, __, h] = box;
+
+                    return (
+                        <Project
+                            {...{
+                                project,
+                                box,
+                                index: i,
+                                pushIndex,
+                                transition,
+                                mt: false,
+                                mb: y + h === gridMaxY,
+                            }}
+                        />
+                    );
+                })}
+            </div>
+            <DiagonalDivider
+                middleCorner="tr"
+                classNameContainer="h-[10vh] w-full -mt-[calc(10vh+1rem)] relative z-50 pointer-events-none"
+                path1Props={{
+                    className: "hidden",
+                }}
+                path2Props={{
+                    ...listener_bottom,
+                    className: "fill-emerald-700 pointer-events-auto",
+                }}
+            />
+            <div className="h-16 -mb-16 z-[60]" {...listener_bottom}></div>
+        </div>
+    );
+};
+
+const animate = (() => {
+    const animationConfig: KeyframeAnimationOptions = {
+        duration: 300,
+        easing: "ease-in-out",
+        iterations: 1,
+        fill: "forwards",
+    };
+
+    return (
+        cardRef: React.MutableRefObject<HTMLDivElement>,
+        coverRef: React.MutableRefObject<HTMLDivElement>,
+        transition: Transition
+    ) => {
+        cardRef.current.animate(transition.card, animationConfig);
+        coverRef.current.animate(transition.cover, animationConfig);
+    };
+})();
+
+type ProjectArgs = {
+    project: Project;
+    box: Box;
+    transition?: Transition;
+    index: INDEX;
+    pushIndex: React.Dispatch<React.SetStateAction<any>>;
+    mt?: boolean;
+    mb?: boolean;
+};
+
+const Project: FC<ProjectArgs> = ({
+    index,
+    pushIndex,
+    project,
+    box,
+    transition,
+    mt = false,
+    mb = false,
+}) => {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const coverRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (transition) animate(cardRef, coverRef, transition);
+    }, [transition]);
+
+    const pushInd = useCallback(() => pushIndex(index), [index, pushIndex]);
+
+    const { isFocus, ...listeners } = useListeners(pushInd);
+    const padding =
+        (mt ? "pt-[calc(10vh+2rem)] " : "") +
+        (mb ? "pb-[calc(10vh+2rem)] " : "");
+
+    return (
+        <div
+            {...listeners}
+            style={getStyle(box)}
+            className={`w-full relative z-20 group overflow-hidden text-gray-100 ${
+                isFocus ? "cursor-pointer" : ""
+            }`}
+        >
+            <div className="block absolute inset-0 w-full h-full">
+                <Image
+                    src={project.img}
+                    layout="fill"
+                    className={"object-cover bg-fixed " + project.color}
+                />
+            </div>
+            <div
+                ref={coverRef}
+                className={`absolute inset-0 p-4 w-full h-full 
+                ${padding}
+                ${project.color}
+                `}
+            >
+                <div className="h-full max-h-96 flex flex-col">
+                    <h2 className="text-3xl font-medium font-montserrat">
+                        {project.title}
+                    </h2>
+                    <div
+                        className={`mt-4 ml-4 w-40 h-1 bg-black rounded-full`}
+                    ></div>
+                    <p className="mt-8 ml-4 max-w-sm text-lg font-light text-gray-200">
+                        {project.description}
+                    </p>
+                    <div className="flex flex-wrap gap-4 mt-auto">
+                        {project.tags.map((tag) => (
+                            <div
+                                className={`px-2 py-1 text-white rounded-md ${project.darkColor}`}
+                            >
+                                {tag}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            <div
+                ref={cardRef}
+                className={`absolute inset-0 w-full h-full opacity-0 ${padding}`}
+            >
+                <div
+                    className={`p-4 mt-8 w-96 max-w-xs rounded-r-md shadow-md ${project.darkColor}`}
+                >
+                    <h2 className="text-3xl text-center font-medium">
+                        {project.title}
+                    </h2>
+                    <div className="flex flex-row gap-x-4 justify-evenly mt-8 text-lg">
+                        <Link href={project.source}>
+                            <a
+                                target="_parent"
+                                className={`${project.color} px-4 py-2 rounded-md hover:underline focus:underline focus:outline-none`}
+                            >
+                                Source
+                            </a>
+                        </Link>
+                        <Link href={project.live}>
+                            <a
+                                target="_parent"
+                                className={`${project.color} px-4 py-2 rounded-md hover:underline focus:underline focus:outline-none`}
+                            >
+                                Live
+                            </a>
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export const ProjectsSection = () => (
+    <div id="projects_section">
+        <div className="pt-16 pb-8 lg:pt-24 w-full bg-gradient-to-b from-neutral-900/90 to-transparent relative z-20">
+            <Layout>
+                <SectionTitle href="#projects_section" alt="Projects">
+                    <ProjectsSvg />
+                </SectionTitle>
+                {/* <div className="text-stone-300 mt-4 sm:ml-16 max-w-sm backdrop-blur-sm bg-black/20 rounded-lg flex flex-row gap-x-4 overflow-hidden"> 
+                    <div className="w-2 h-full bg-indigo-300"></div>
+                    <p className="px-3 py-2">
+                        A selecton of some of my webdevelopment Projects. Navigate with your Mouse, Tab or wasd Keys 
+                    </p>
+                </div> */}
+            </Layout>
+        </div>
+        <ListenerProvider>
+            <Projects projects={projects as any} />
+        </ListenerProvider>
+    </div>
+);
