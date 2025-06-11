@@ -92,8 +92,6 @@ const getAnimation = (i1: INDEX_W_BUFFER, i2:INDEX_W_BUFFER, boxes: Box[], botto
 
     const animationType = getAnimationType(fromBox, toBox);
 
-    console.log(i1, i2, aName(animationType))
-     
     return {
         ...(!isBuffer(i1) && {
             from: {...transitions[animationType], index: i1 as INDEX}

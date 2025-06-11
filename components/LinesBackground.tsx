@@ -195,8 +195,8 @@ const lines = [
 // use page coordinates for state, client coords for render
 export const LinesBackground = () => {
   //state
-  const canvasRef = useRef<HTMLCanvasElement>();
-  const canvasContext = useRef<CanvasRenderingContext2D>();
+  const canvasRef = useRef<HTMLCanvasElement>(undefined);
+  const canvasContext = useRef<CanvasRenderingContext2D>(undefined);
   const dimensions = useRef<[number, number]>([0, 0]);
 
   // clients mouse position

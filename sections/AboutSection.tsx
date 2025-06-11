@@ -33,7 +33,7 @@ export const AboutSection = () => (
                             height={300}
                             className="lg:block rounded-full max-w-md overflow-clip h-min border-solid border-2 border-indigo-500"
                             // layout="fill"
-                            src="/ProfilePic.jpg"
+                            src="/pfpNew.jpg"
                         />
                     </div>
                 </div>
@@ -52,7 +52,7 @@ export const AboutSection = () => (
                                 <span className="text-cyan-300">
                                     studying Physiks
                                 </span>{" "}
-                                at the
+                                at the{" "}
                                 <MyLink
                                     href="https://www.uni-hamburg.de/"
                                     color="cyan"

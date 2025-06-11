@@ -1,4 +1,7 @@
 module.exports = {
+    images: {
+        unoptimized: true, // thank you vercel :////////////
+      },
     typescript: {
         // !! WARN !!
         // Dangerously allow production builds to successfully complete even if

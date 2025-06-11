@@ -47,7 +47,6 @@ export const useListeners = (pushInd): ListenerTypes & { isFocus: boolean } => {
             onTouchStart: pushFalse,
             onMouseDown: pushFalse,
             onFocusCapture: pushTrue,
-
         }
         : {
             isFocus: false,
