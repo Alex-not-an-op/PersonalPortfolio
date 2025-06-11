@@ -1,11 +1,4 @@
-import { Project, Range_union } from "./ProjectsInterface";
-
-type DeepReadonly<T> = 
-    T extends Array<infer U>
-      ? ReadonlyArray<DeepReadonly<U>>
-      : T extends object
-        ? { [K in keyof T]: DeepReadonly<T[K]> }
-        : T;
+// import { Project, Range_union } from "./ProjectsInterface";
 
 export const projects = [
 {
@@ -73,8 +66,8 @@ export const projects = [
     source: "https://github.com/AlexMasterOfIceTea/construction_site",
     live: "https://benevolent-churros-b5ddcb.netlify.app",
     img: "/uphome.png",
-    color: "bg-sky-600",
-    darkColor: "bg-sky-900",
+    color: "bg-lime-700",
+    darkColor: "bg-lime-900",
 },
 {
     title: "Legacy Portfolio",
@@ -85,7 +78,18 @@ export const projects = [
     live: "https://spectacular-donut-35353f.netlify.app/",
     source: "https://github.com/AlexMasterOfIceTea/portfolio",
     color: "bg-cyan-600",
-    darkColor: "bg-cyan-900"},
+    darkColor: "bg-cyan-900"
+},
+{
+    title: "Self",
+    description: "",
+    tags: ["Next.js", "Tailwind", "Typescript"],
+    img: "",
+    live: "#",
+    source: "https://github.com/Alex-not-an-op/PersonalPortfolio",
+    color: "bg-indigo-600",
+    darkColor: "bg-indigo-900"
+},
 ] as const //satisfies DeepReadonly<Project[]>;
 
 //satisfies should work ? Yet it doesnt

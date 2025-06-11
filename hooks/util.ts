@@ -30,14 +30,3 @@ export const range: <From extends number, To extends number>(
     to: To
 ) => Range<From, To> = (from, to) =>
     [...Array(to - from)].map((_, i) => from + i) as any;
-
-// /** Maps over all Project indices. Callback should return a key, value pair. returns an Object  */
-// export const mapRangeToObject: <T, R extends INDEX[]>(
-//     range: R,
-//     cb: (i: keyof R) => T
-// ) => Record<R[INDEX], T> = (range, cb) =>
-//     Object.fromEntries(range.map((i) => [i, cb(i)])) as any;
-
-// /** Maps over all project indices. Returns an Object with callback argument i as its keys.*/
-// export const mapIndicesToObject: <T>(cb: (i: INDEX) => T) => Record<INDEX, T> = (cb) =>
-//     mapRangeToObject(INDICES, cb);

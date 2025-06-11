@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 type ListenerContextType = {
     focusMode: boolean;
@@ -30,12 +30,13 @@ type ListenerTypes = Pick<
 export const useListeners = (pushInd): ListenerTypes & { isFocus: boolean } => {
     const { focusMode, setFocusMode } = useContext(ListenerContext);
 
+    useEffect(() => console.log(focusMode), [focusMode]);
+
     const pushTrue = useCallback(() => {setFocusMode(true); pushInd()}, []);
     const pushFalse = useCallback(() => {setFocusMode(false); pushInd()}, []);
     const focusCapture = useCallback((e) => {
-        // Ignores events where user clicks a link
-        // Skip if focused element or its ancestor is a link
-        if (e.target.closest('a[href]'))
+        // Skip if focus is captured bc link was clicked
+        if (e.target.tagName === 'a')
             pushFalse();
         else
             pushTrue();

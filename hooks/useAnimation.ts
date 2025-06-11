@@ -1,14 +1,10 @@
 import { CSSProperties, useCallback, useState, useMemo, useRef } from "react";
-import { Range_union, range } from "./util";
-import {Project, INDEX, GridLayout, Box} from "../data/ProjectsInterface";
-
+import {INDEX, Box} from "../data/ProjectsInterface";
 enum Animations {
     SLIDE_LEFT, SLIDE_RIGHT, SLIDE_UP, SLIDE_DOWN, FADE, NONE
 }
 
 const swapType = (type: Animations):Animations => type <= Animations.FADE ? type : type + 1 - 2*(type % 2) 
-
-const aName = (name) => ["SLIDE_LEFT", "SLIDE_RIGHT", "SLIDE_UP", "SLIDE_DOWN", "FADE", "NONE"][name]
 
 type Animation = {
     from?: Transition & {index: INDEX}, 
