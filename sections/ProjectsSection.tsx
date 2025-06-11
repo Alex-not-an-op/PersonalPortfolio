@@ -23,8 +23,6 @@ const getGridAreaStype = ([x, y, w, h]: Box): CSSProperties => ({
 const Projects = () => {
     const { boxes, classNameGrid, projects } = useLayout();
 
-    console.log(boxes, projects)
-
     const { pushIndex, animation } = useAnimation(boxes);
 
     const listener_top = useListeners(() => pushIndex("buffer_top"));
