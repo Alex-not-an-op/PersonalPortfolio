@@ -11,7 +11,7 @@ import { Layout } from "../components/Layout";
 import { SectionTitle } from "../components/SectionTitle";
 import ProjectsSvg from "../assets/Projects.svg";
 import { DiagonalDivider } from "../components/DiagonalDivider";
-import { INDEX, Box, Projects } from "../data/ProjectsInterface";
+import { INDEX, Box, Projects as ProjectsType} from "../data/ProjectsInterface";
 import { useAnimation, Transition } from "../hooks/useAnimation";
 import { ListenerProvider, useListeners } from "../hooks/useListener";
 import { useLayout } from "../hooks/useGridLayout";
@@ -22,6 +22,8 @@ const getGridAreaStype = ([x, y, w, h]: Box): CSSProperties => ({
 
 const Projects = () => {
     const { boxes, classNameGrid, projects } = useLayout();
+
+    console.log(boxes, projects)
 
     const { pushIndex, animation } = useAnimation(boxes);
 
@@ -99,7 +101,7 @@ const animate = (() => {
 })();
 
 type ProjectArgs = {
-    project: Projects[number];
+    project: ProjectsType[number];
     box: Box;
     transition?: Transition;
     index: INDEX;
