@@ -52,7 +52,6 @@ const Projects = () => {
                     return (
                         <Project
                             {...{
-                                key,
                                 project,
                                 box,
                                 index,
@@ -120,6 +119,8 @@ const Project: FC<ProjectArgs> = ({
 }) => {
     const cardRef = useRef<HTMLDivElement>(null);
     const coverRef = useRef<HTMLDivElement>(null);
+
+    console.log("rendered "+ project.title)
 
     useEffect(() => {
         if (transition) animate(cardRef, coverRef, transition);
