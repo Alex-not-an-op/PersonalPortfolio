@@ -85,7 +85,7 @@ const FormCard = () => (
 				className="flex w-full min-w-max max-w-md flex-col gap-y-2 mt-8"
 				name="contact"
 				method="POST"
-                netlify="true"
+                data-netlify="true"
 			>
 				{/* <input type="hidden" name="form-name" value="contact" /> */}
 				<InputField placeholder="Name" name="name" type="text"/>
