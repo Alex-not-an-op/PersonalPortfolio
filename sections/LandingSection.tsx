@@ -6,7 +6,6 @@ import Link from "next/link";
 // import { MyName } from "../MyName";
 import MyName from "../assets/MyName.svg";
 import { SectionTitle } from "../components/SectionTitle";
-import { HtmlProps } from "next/dist/shared/lib/html-context";
 
 const Moblie = () => (
     <div className="lg:hidden p-4 pb-32">
