@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { HTMLProps, forwardRef } from "react";
 import { ChevronIcon } from "../components/icons/ChevronIcon";
 import { LinesBackground } from "../components/LinesBackground";
 import { ResponsivenessIcon } from "../components/icons/ResponivenessIcon";
@@ -6,6 +6,7 @@ import Link from "next/link";
 // import { MyName } from "../MyName";
 import MyName from "../assets/MyName.svg";
 import { SectionTitle } from "../components/SectionTitle";
+import { HtmlProps } from "next/dist/shared/lib/html-context";
 
 const Moblie = () => (
     <div className="lg:hidden p-4 pb-32">
@@ -23,11 +24,11 @@ const Moblie = () => (
                 <ResponsivenessIcon id="123mob" />
 
                 <div className="flex flex-row gap-x-8 z-20">
-                    <FilledButton>
-                        <a href="#contact_section" target="_blank">Contact</a>
+                    <FilledButton href="#contact_section">
+                        Contact
                     </FilledButton>
-                    <OutlinedButton>
-                        <a href="Lebenslauf.pdf" target="_blank">Download CV</a>
+                    <OutlinedButton href="Lebenslauf.pdf" target="_blank">
+                        Download CV
                     </OutlinedButton>
                 </div>
             </div>
@@ -51,12 +52,12 @@ const Desktop = () => (
                 {/* Proving modern, dynamic Web Solutions that scale with your Buisness */}
             </p>
             <div className="flex flex-row h-full flex-grow gap-x-8 z-20 ">
-                <FilledButton>
-                    <a href="#contact_section" target="_blank">Contact</a>
+                <FilledButton href="#contact_section">
+                    Contact
                     <ChevronIcon stroke="#ffffff" hoverStroke="#E0E7FF" />
                 </FilledButton>
-                <OutlinedButton>
-                    <a href="Lebenslauf.pdf" target="_blank">Download CV</a>
+                <OutlinedButton href="Lebenslauf.pdf" target="_blank">
+                    Download CV
                     <ChevronIcon stroke="#ffffff" hoverStroke="#E0E7FF" />
                 </OutlinedButton>
             </div>
@@ -68,50 +69,54 @@ export const LandingSection = () => (
     <div className="w-screen min-h-screen bg-gray-900 relative p-4">
         <Moblie />
         <Desktop />
-        <Link href="#about_section">
-            <button className="absolute inset-x-0 bottom-4 mx-auto text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white flex flex-col items-center gap-y-4">
-                Learn More
+        <div className="flex flex-row justify-center">
+            <a href="#about_section" className="flex flex-col gap-y-4 items-center mx-auto text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white group outline-none">
+                <p className="group-hover:text-indigo-300 group-focus:text-indigo-300 group-hover:underline group-focus:underline">Learn More</p>
                 <svg
                     viewBox="0 0 16 8"
                     width={32}
                     height={16}
                     stroke="white"
                     fill="none"
-                    className="animate-bounce"
+                    className="animate-bounce group-hover:stroke-indigo-300 group-focus:stroke-indigo-300"
                 >
                     <path d="M 0,0 l8,8 l8,-8" />
                 </svg>
-            </button>
-        </Link>
+            </a>
+        </div>
+
     </div>
 );
 
 const FilledButton = forwardRef<
-    HTMLButtonElement,
-    { children: React.ReactNode }
+    HTMLAnchorElement,
+    Omit<HTMLProps<HTMLAnchorElement>, "className">
 >((props, ref) => (
-    <button
+    <a
         ref={ref}
+        {...props}
         className="group px-3 py-2 lg:px-6 lg:py-4 text-xl md:text-2xl rounded-lg hover:text-indigo-100 
-      bg-indigo-600 hover:bg-indigo-500/80 hover:backdrop-blur-sm text-white hover:shadow-lg hover:outline hover:outline-1 hover:outline-indigo-100 transition-none
-        transition-all duration-300 flex flex-row gap-x-2 items-center h-16 self-end"
+                bg-indigo-600 hover:bg-indigo-500/80 hover:backdrop-blur-sm text-white hover:shadow-lg hover:ring-2 hover:ring-indigo-100 transition-none
+                transition-all duration-300 flex flex-row gap-x-2 items-center h-16 self-end focus:ring-2 focus:ring-indigo-300 outline-none"
     >
         {props.children}
-    </button>
+    </a>
 ));
 
 const OutlinedButton = forwardRef<
-    HTMLButtonElement,
-    { children: React.ReactNode }
+    HTMLAnchorElement,
+    Omit<HTMLProps<HTMLAnchorElement>, "className">
 >((props, ref) => (
-    <button
+    <a
         ref={ref}
+        {...props}
         className="
+        outline-none
         px-3 py-2 lg:px-6 lg:py-4 text-xl md:text-2xl
-		text-white rounded-lg hover:outline hover:outline-1 hover:outline-indigo-100 hover:shadow-none group shadow-md shadow-indigo-800 
-        bg-black/20 backdrop-blur-sm hover:text-indigo-100 h-16 self-end
+		text-white rounded-lg hover:ring-2 hover:ring-indigo-100 hover:shadow-none group shadow-md shadow-indigo-800 
+        bg-black/20 backdrop-blur-sm hover:text-indigo-100 h-16 self-end focus:ring-2 focus:ring-indigo-100
         flex flex-row gap-x-2 items-center justify-center"
     >
         {props.children}
-    </button>
+    </a>
 ));

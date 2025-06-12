@@ -10,9 +10,9 @@ const DesktopNavbar = () => (
       {menuItems.map((text) => (
         <div className="group inline-block mx-4">
           <Link href={"#" + text.toLowerCase() + "_section"}>
-            <a className="text-lg lg:text-xl text-white">{text}</a>
+            <a className="text-lg lg:text-xl text-white focus:underline outline-none">{text}</a>
           </Link>
-          <div className="bg-indigo-300 h-1 ml-2 mt-0.5 rounded-full w-0 group-hover:w-[calc(100%-8px)] transition-[width] duration-200"></div>
+          <div className="bg-indigo-300 h-1 ml-2 rounded-full w-0 group-hover:w-[calc(100%-8px)] transition-[width] duration-200"></div>
         </div>
       ))}
     </nav>
@@ -28,7 +28,7 @@ const MobileNavbar = () => {
       <div
         className={`${
           open ? "opacity-100" : "opacity-0 pointer-events-none"
-        } transition-opacity duration-500 absolute inset-x-0 top-full w-full py-4 flex flex-col items-center gap-y-4 -z-10 bg-emerald-700`}
+        } outline-none transition-opacity duration-500 absolute inset-x-0 top-full w-full py-4 flex flex-col items-center gap-y-4 -z-10 bg-emerald-700`}
       >
         {menuItems.map((text) => (
           <div className="group inline-block mx-4 max-w-min">
@@ -40,7 +40,7 @@ const MobileNavbar = () => {
                 {text}
               </a>
             </Link>
-            <div className="bg-indigo-300 h-1 ml-2 mt-0.5 rounded-full w-0 group-hover:w-[calc(100%-8px)] transition-[width] duration-200"></div>
+            <div className="bg-indigo-300 h-1 ml-2 mt-0.5 rounded-full w-0 group-hover:w-[calc(100%-8px)] group-focus:w-[calc(100%-8px)] transition-[width] duration-200"></div>
           </div>
         ))}
       </div>

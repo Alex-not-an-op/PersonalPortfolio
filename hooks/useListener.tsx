@@ -30,26 +30,27 @@ type ListenerTypes = Pick<
 export const useListeners = (pushInd): ListenerTypes & { isFocus: boolean } => {
     const { focusMode, setFocusMode } = useContext(ListenerContext);
 
-    const pushTrue = useCallback((e) => {
-        if(e.target.tagName === "A")
-            return;
-
+    const pushTrue = useCallback(() => {
         setFocusMode(true); 
         pushInd()
     }, []);
-    const pushFalse = useCallback((e) => {
-        if(e.target.tagName === "A")
-            return;
 
+    const pushFalse = useCallback(() => {
         setFocusMode(false); 
         pushInd()
     }, []);
 
+    const pushFalseIfNotLink = useCallback((e) => {
+        if(e.target.tag === "A")
+            return 
+        pushTrue();
+    }, [])
+
     return focusMode
         ? {
             isFocus: true,
-            onTouchStart: pushFalse,
-            onMouseDown: pushFalse,
+            onTouchStart: pushFalseIfNotLink,
+            onMouseDown: pushFalseIfNotLink,
             onFocusCapture: pushTrue,
         }
         : {

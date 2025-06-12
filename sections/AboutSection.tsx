@@ -137,15 +137,15 @@ const MyLink: FC<
     }
 > = forwardRef((props) => {
     // Just gonna generate tw classes in this comment:
-    // hover:text-lime-300 before:bg-lime-800 text-lime-300 fill-lime-300
-    // hover:text-cyan-300 before:bg-cyan-800 text-cyan-300 fill-cyan-300
-    // hover:text-red-300 before:bg-red-800 text-red-300 fill-red-300
-    // Its not very extendable but im only using this in this section so it will do.
+    // hover:text-lime-300 focus:text-lime-300 before:bg-lime-800 text-lime-300 fill-lime-300
+    // hover:text-cyan-300 focus:text-lime-300  before:bg-cyan-800 text-cyan-300 fill-cyan-300
+    // hover:text-red-300 focus:text-lime-300  before:bg-red-800 text-red-300 fill-red-300
+    // Its not very extendable but im only using this in this section so it will have to do.
     const { children, className, color, after, ...rest } = props;
     return (
         <a
             {...rest}
-            className={`${className} relative inline-block text-${color}-300 hover:no-underline before:absolute before:left-2 before:bottom-1 hover:text-${color}-300 before:block before:w-0 before:transition-[width] before:duration-300 hover:before:w-[calc(100%-24px)] before:h-3 before:rounded-sm before:bg-${color}-800`}
+            className={`${className} outline-none relative inline-block text-${color}-300 no-underline before:absolute before:left-2 before:bottom-1 hover:text-${color}-300 focus:text-${color}-300 before:block before:w-0 before:transition-[width] before:duration-300 hover:before:w-[calc(100%-24px)] focus:before:w-[calc(100%-24px)] before:h-3 before:rounded-sm before:bg-${color}-800`}
         >
             <span className="relative">
                 {children}

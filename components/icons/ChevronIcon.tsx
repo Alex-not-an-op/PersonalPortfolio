@@ -16,12 +16,12 @@ export const ChevronIcon: FC<{ hoverStroke: string; stroke: string }> = ({
 		<path
 			stroke={stroke}
 			d="M 4,0 L12,8 L4, 16"
-			className="group-hover:translate-x-2 group-hover:opacity-0 transition-all duration-300"
+			className="group-hover:translate-x-2 group-hover:opacity-0 group-focus:translate-x-2 group-focus:opacity-0 transition-all duration-300"
 		/>
 		<path
 			stroke={hoverStroke}
 			d="M 4,0 L12,8 L4, 16"
-			className="-translate-x-2 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-300"
+			className="-translate-x-2 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 group-focus:translate-x-0 group-focus:opacity-100 transition-all duration-300"
 		/>
 	</svg>
 );
