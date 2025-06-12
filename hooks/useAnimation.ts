@@ -109,6 +109,7 @@ export const useAnimation = (boxes: Box[]) => {
         setIndex(i => {
             if (i === index)
                 return i;
+
             prevIndexRef.current = i;
             return index;
         });
@@ -116,6 +117,7 @@ export const useAnimation = (boxes: Box[]) => {
 
     const bottomEdge = useMemo(() => boxes.reduce((maxY, [_, y, __, h]) => maxY < y+h ? y+h : maxY, 0), [boxes])
 
+    console.log("index changed")
     const animation = getAnimation(index, prevIndexRef.current, boxes, bottomEdge);
 
     return {pushIndex, animation}

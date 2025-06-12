@@ -30,16 +30,19 @@ type ListenerTypes = Pick<
 export const useListeners = (pushInd): ListenerTypes & { isFocus: boolean } => {
     const { focusMode, setFocusMode } = useContext(ListenerContext);
 
-    useEffect(() => console.log(focusMode), [focusMode]);
+    const pushTrue = useCallback((e) => {
+        if(e.target.tagName === "A")
+            return;
 
-    const pushTrue = useCallback(() => {setFocusMode(true); pushInd()}, []);
-    const pushFalse = useCallback(() => {setFocusMode(false); pushInd()}, []);
-    const focusCapture = useCallback((e) => {
-        // Skip if focus is captured bc link was clicked
-        if (e.target.tagName === 'a')
-            pushFalse();
-        else
-            pushTrue();
+        setFocusMode(true); 
+        pushInd()
+    }, []);
+    const pushFalse = useCallback((e) => {
+        if(e.target.tagName === "A")
+            return;
+
+        setFocusMode(false); 
+        pushInd()
     }, []);
 
     return focusMode
@@ -53,6 +56,6 @@ export const useListeners = (pushInd): ListenerTypes & { isFocus: boolean } => {
             isFocus: false,
             onTouchStart: pushFalse,
             onMouseEnter: pushFalse,
-            onFocusCapture: focusCapture,
+            onFocusCapture: pushTrue,
         };
 };
