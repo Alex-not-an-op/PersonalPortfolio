@@ -116,7 +116,7 @@ export const useLayout = () => {
     
     return {
         boxes: layout.order.map(i => layout.boxes[i]),
-        projects: layout.order.map(i => projects[i]),
+        projects: layout.order.map(i => ({...projects[i], key: i})),
         classNameGrid: layout.classNameGrid,
     };
 };

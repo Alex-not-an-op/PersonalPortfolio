@@ -143,8 +143,8 @@ export const ResponsivenessIcon: FC<{id: number|string}> = ({id}) => {
 			>
                 <defs>
                     <clipPath id={clipId} className="transition-all duration-500">
-                        {getPaths(index).filter(p => p.useAsClipped).map(props => (
-                            <path {...props} />
+                        {getPaths(index).filter(p => p.useAsClipped).map((props, i) => (
+                            <path {...props} key={i}/>
                         ))}
                         <path d=""/>
                     </clipPath>

@@ -38,7 +38,7 @@ const Projects = () => {
         <div className="flex flex-col w-full bg-transparent relative z-20">
             <div className="h-16 -mt-16 z-[60]" {...listener_top}></div>
             <div className={`py-4 ${classNameGrid} relative z-50`}>
-                {projects.map((project, index:INDEX) => {
+                {projects.map(({key, ...project}, index:INDEX) => {
                     const box = boxes[index];
 
                     let transition = null;
@@ -52,6 +52,7 @@ const Projects = () => {
                     return (
                         <Project
                             {...{
+                                key,
                                 project,
                                 box,
                                 index,

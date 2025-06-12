@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FC } from "react";
+import { FC, HTMLProps, forwardRef, useImperativeHandle } from "react";
 import { Layout } from "../components/Layout";
 import { SectionTitle } from "../components/SectionTitle";
 import Contact from "../assets/Contact.svg"
@@ -12,24 +12,26 @@ export const contact = {
 	linkedIn: "https://www.linkedin.com/in/alexander-schneider-285b80248/"
 } as const;
 
-const InputField: FC<{ placeholder: string; name: string }> = ({ placeholder, name }) => (
+const InputField= forwardRef<HTMLInputElement, HTMLProps<HTMLInputElement>>((props, ref) => (
 	<div className="rounded-md bg-black/70 px-4 py-2 focus-within:ring-2 focus-within:ring-emerald-500">
 		<input
+            ref={ref}
 			className="w-full bg-transparent text-white placeholder-gray-300 focus:outline-none"
-			{...{ name, placeholder }}
+			{...props}
 		></input>
 	</div>
-);
+));
 
-const InputArea: FC<{ placeholder: string; name: string }> = ({ placeholder, name }) => (
+const InputArea = forwardRef<HTMLTextAreaElement, HTMLProps<HTMLTextAreaElement>>((props, ref) => (
 	<div className="rounded-md bg-black/70 px-4 py-2 focus-within:ring-2 focus-within:ring-emerald-500">
 		<textarea
 			rows={5}
+            ref={ref}
 			className="w-full resize-y bg-transparent text-white placeholder-gray-300 focus:outline-none"
-			{...{ name, placeholder }}
+			{...props}
 		></textarea>
 	</div>
-);
+));
 
 const SubmitButton: FC = () => (
 	<button
@@ -83,13 +85,12 @@ const FormCard = () => (
 				className="flex w-full min-w-max max-w-md flex-col gap-y-2 mt-8"
 				name="contact"
 				method="POST"
-				data-netlify="true"
+                netlify="true"
 			>
-				{/* This is required for netlify forms */}
-				<input type="hidden" name="form-name" value="contact" />
-				<InputField placeholder="Name" name="name" />
-				<InputField placeholder="Email" name="email" />
-				<InputArea placeholder="Your Message" name="message" />
+				{/* <input type="hidden" name="form-name" value="contact" /> */}
+				<InputField placeholder="Name" name="name" type="text"/>
+				<InputField placeholder="Email" name="email" type="email"/>
+				<InputArea placeholder="Your Message" name="message" type="text"/>
 				<SubmitButton />
 			</form>
 			<div className="hidden md:flex flex-col gap-y-6 border-l-2 h-full border-white my-8 p-4 text-white text-lg">
